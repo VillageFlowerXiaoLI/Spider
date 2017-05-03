@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import requests
+from random import randint
 from lxml import etree
 import json
 
@@ -25,11 +26,24 @@ req_headers = {
 
 
 # 获取游记url
-def get_travels_url():
-    url = 'http://you.ctrip.com/travels'
+# [国内，亚洲，欧洲，北美洲，大洋洲，其他州]
+# 指定或不指定区域
+# 返回游记url
+def get_travels_url(area=None):
+    req_url = 'http://you.ctrip.com/travels'
 
     page = requests.get(url=, headers=req_headers).content  # .decode('utf-8')
 
     data = etree.HTML(page.decode('utf-8'))
 
-    travels_url = data.xpath('//div[@class="despop_box/*"]')
+    url_info = data.xpath('//div[@class="despop_box"]//a')
+
+    if area != None:
+        # 存在要求的位置名称
+        for url in url_info:
+            if url.text == area:
+                return 'you.ctrip.com' + url.xpath('@href')
+    else:
+        # 不存在要求，返回随机游记
+        index = randint(0, len(url_info) - 1)
+        return 'you.ctrip.com' + url_info[index].xpath('@herf')
