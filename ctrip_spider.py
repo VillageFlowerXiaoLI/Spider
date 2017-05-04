@@ -50,9 +50,7 @@ def get_area_travels_url(area=None):
 
 
 def get_travel(area=None):
-    req_url = get_area_travels_url(area)
-
-    return req_url
+    return get_area_travels_url(area)
 
 
 if __name__ == '__main__':
