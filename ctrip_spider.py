@@ -20,7 +20,7 @@ req_headers = {
 def get_travels_url(area=None):
     req_url = 'http://you.ctrip.com/travels'
 
-    page = requests.get(req_url, headers=req_headers).content
+    page = requests.get(req_url, headers=req_headers, timeout=15).content
 
     data = etree.HTML(page.decode('utf-8'))
 
@@ -40,7 +40,7 @@ def get_travels_url(area=None):
 def get_area_travels_url(area=None):
     req_url = get_travels_url(area)
 
-    page = requests.get(req_url, headers=req_headers).content
+    page = requests.get(req_url, headers=req_headers, timeout=15).content
 
     data = etree.HTML(page.decode('utf-8'))
 

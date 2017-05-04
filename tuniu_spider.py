@@ -20,7 +20,7 @@ req_headers = {
 def get_travels_url():
     req_url = 'http://trips.tuniu.com/'
 
-    page = requests.get(req_url, headers=req_headers).content
+    page = requests.get(req_url, headers=req_headers, timeout=15).content
 
     data = etree.HTML(page.decode('utf-8'))
 

@@ -19,7 +19,7 @@ req_headers = {
 def get_travels_url():
     req_url = 'http://travel.qunar.com/travelbook/list.htm?order=hot_heat'
 
-    page = requests.get(req_url, headers=req_headers).content
+    page = requests.get(req_url, headers=req_headers, timeout=15).content
 
     data = etree.HTML(page.decode('utf-8'))
 
@@ -34,7 +34,7 @@ def get_area_travels_url():
     tmp_url = get_travels_url()
     req_url = 'http://' + tmp_url[2:35] + tmp_url[50:] + '/hot_heat/1.htm'
 
-    page = requests.get(req_url, headers=req_headers).content
+    page = requests.get(req_url, headers=req_headers, timeout=15).content
 
     data = etree.HTML(page.decode('utf-8'))
 

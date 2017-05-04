@@ -1,15 +1,12 @@
+# -*- coding: utf-8 -*-
+
 from ctrip_spider import get_travel
 import requests
 from random import randint
 from lxml import etree
 import sqlite3
 
-'''
-<div class="ctd_main_body">
-游记正文
-<a title="点击查看原图">
-各个图片  一篇游记可能很多
-'''
+db_path = '/Users/duxinlu/Desktop/dachuang2017/dachuang.db'
 
 req_headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -24,10 +21,16 @@ req_headers = {
                   'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36', }
 
 
+def connect_db():
+    db = sqlite3.connect(db_path)
+
+    return db
+
+
 def get_html_root():
     travel_url = get_travel()
 
-    page = requests.get(travel_url, headers=req_headers).content
+    page = requests.get(travel_url, headers=req_headers, timeout=15).content
 
     return etree.HTML(page.decode('utf-8'))
 
@@ -35,23 +38,46 @@ def get_html_root():
 data = get_html_root()
 
 
+# data = etree.HTML(open('/Users/duxinlu/Desktop/test.html').read().decode('utf-8'))
+
+
 def get_title():
     global data
+    title = data.xpath('//title/text()')[0].split('-')[0].strip()
 
-    title = data.xpath('//title/text()')[0]
+    return title
 
 
+# 内容不好抓
 def get_content():
     global data
+
+    return ''
 
 
 # 只取前五十张图片的url
 def get_img_urls():
     global data
 
-    img_info = data.xpath('//a[@title="%s"]' % ('点击查看原图'.decode('utf-8')))
+    img_info = data.xpath('//a[@share-pic="1"]')
+
     img_list = []
-    for i in range(max(50, len(img_info))):
-        img_list.appnd(img_info[i].xpath('@herf')[0])
+    for i in range(0, max(20, len(img_info))):
+        img_list.append(img_info[i].xpath('@href')[0])
 
     img_urls = '_'.join(img_list)
+
+    return img_urls
+
+
+if __name__ == '__main__':
+    db = connect_db()
+
+    title = get_title()
+    content = get_content()
+    img_urls = get_img_urls()
+
+    db.execute('insert into spider_data values ("ctrip","%s","%s","%s","%s");'
+               % (get_travel(), title, content, img_urls))
+    db.commit()
+    db.close()
