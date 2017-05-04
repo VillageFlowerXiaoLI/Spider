@@ -3,14 +3,6 @@
 import requests
 from random import randint
 from lxml import etree
-import json
-
-'''
-携程的游记根据地点区分
-
-<div class="despop_box">
-
-'''
 
 req_headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -25,10 +17,6 @@ req_headers = {
                   'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36', }
 
 
-# 获取游记url
-# [国内，亚洲，欧洲，北美洲，大洋洲，其他州]
-# 指定或不指定区域
-# 返回游记url
 def get_travels_url(area=None):
     req_url = 'http://you.ctrip.com/travels'
 
@@ -42,14 +30,14 @@ def get_travels_url(area=None):
         # 存在要求的位置名称
         for url in url_info:
             if url.text == area:
-                return 'you.ctrip.com' + url.xpath('@href')
+                return 'http://you.ctrip.com' + url.xpath('@href')[0]
     else:
         # 不存在要求，返回随机游记
         index = randint(0, len(url_info) - 1)
-        return 'you.ctrip.com' + url_info[index].xpath('@herf')
+        return 'http://you.ctrip.com' + url_info[index].xpath('@href')[0]
 
 
-def get_area_travels_url(area):
+def get_area_travels_url(area=None):
     req_url = get_travels_url(area)
 
     page = requests.get(req_url, headers=req_headers).content
@@ -58,7 +46,14 @@ def get_area_travels_url(area):
 
     url_info = data.xpath('//a[@class="journal-item cf"]')
 
-    return 'you.ctrip.com' + url_info[0].xpath('@href')
+    return 'http://you.ctrip.com' + url_info[0].xpath('@href')[0]
 
-def get_travel(area)
-    req_url=get_area_travels_url(area)
+
+def get_travel(area=None):
+    req_url = get_area_travels_url(area)
+
+    return req_url
+
+
+if __name__ == '__main__':
+    print get_travel()
