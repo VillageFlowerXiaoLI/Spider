@@ -32,7 +32,7 @@ req_headers = {
 def get_travels_url(area=None):
     req_url = 'http://you.ctrip.com/travels'
 
-    page = requests.get(url=, headers=req_headers).content  # .decode('utf-8')
+    page = requests.get(req_url, headers=req_headers).content
 
     data = etree.HTML(page.decode('utf-8'))
 
@@ -47,3 +47,18 @@ def get_travels_url(area=None):
         # 不存在要求，返回随机游记
         index = randint(0, len(url_info) - 1)
         return 'you.ctrip.com' + url_info[index].xpath('@herf')
+
+
+def get_area_travels_url(area):
+    req_url = get_travels_url(area)
+
+    page = requests.get(req_url, headers=req_headers).content
+
+    data = etree.HTML(page.decode('utf-8'))
+
+    url_info = data.xpath('//a[@class="journal-item cf"]')
+
+    return 'you.ctrip.com' + url_info[0].xpath('@href')
+
+def get_travel(area)
+    req_url=get_area_travels_url(area)
