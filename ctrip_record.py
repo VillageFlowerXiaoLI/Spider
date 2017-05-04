@@ -59,7 +59,7 @@ def get_img_urls():
     img_info = data.xpath('//a[@share-pic="1"]')
 
     img_list = []
-    for i in range(0, max(20, len(img_info))):
+    for i in range(0, min(20, len(img_info))):
         img_list.append(img_info[i].xpath('@href')[0])
 
     img_urls = '_'.join(img_list)

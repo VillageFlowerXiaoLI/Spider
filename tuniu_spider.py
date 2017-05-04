@@ -31,5 +31,9 @@ def get_travels_url():
     return url_info[index].xpath('a')[0].xpath('@href')[0]
 
 
+def get_travel():
+    return get_travels_url()
+
+
 if __name__ == '__main__':
     print get_travels_url()

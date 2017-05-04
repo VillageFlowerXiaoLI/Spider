@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from tuniu_spider import get_travel
+from qunar_spider import get_travel
 import requests
 from random import randint
 from lxml import etree
@@ -14,8 +14,7 @@ req_headers = {
     'Accept-Language': 'zh-CN,zh;q=0.8',
     'Cache-Control': 'max-age=0',
     'Connection': 'keep-alive',
-    'Host': 'trips.tuniu.com',
-    'Referer': 'http://www.tuniu.com/',
+    'Host': 'travel.qunar.com',
     'Upgrade-Insecure-Requests': '1',
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) '
                   'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.81 Safari/537.36', }
@@ -41,7 +40,7 @@ data = get_html_root()
 def get_title():
     global data
 
-    title = data.xpath('//title/text()')[0][0:-3]
+    title = data.xpath('//title/text()')[0].split('_')[0]
 
     return title
 
@@ -49,28 +48,21 @@ def get_title():
 def get_content():
     global data
 
-    content = ''
-
-    content_info = data.xpath('//p[@class="section-des"]')
-
-    content_list = []
-    for i in content_info:
-        content_list.append(i.text)
-
-    content = '_'.join(content_list)
-
-    return content
+    return ''
 
 
 def get_img_urls():
     global data
 
-    img_info = data.xpath('//img[@style="display: inline;"]')
+    img_info = data.xpath(u'//img[@alt="说说这次旅行图片"]')
 
     img_list = []
 
     for i in range(0, min(20, len(img_info))):
-        img_list.append(img_info[i].xpath('@data-src')[0])
+        img_list.append(img_info[i].xpath('@data-original')[0])
+
+    # for i in img_info:
+    #    img_list.append(i.xpath('@data-original')[0])
 
     img_urls = '_'.join(img_list)
 
@@ -78,13 +70,16 @@ def get_img_urls():
 
 
 if __name__ == '__main__':
+    if len(get_img_urls()) == 0:
+        raise Exception(u'请求图片url出错，请重新爬取数据')
+
     db = connect_db()
 
     title = get_title()
     content = get_content()
     img_urls = get_img_urls()
 
-    db.execute('insert into spider_data values ("tuniu","%s","%s","%s","%s");'
+    db.execute('insert into spider_data values ("qunar","%s","%s","%s","%s");'
                % (get_travel(), title, content, img_urls))
     db.commit()
     db.close()
