@@ -48,7 +48,17 @@ def get_title():
 def get_content():
     global data
 
-    return ''
+    content = ''
+
+    content_info = data.xpath('//div[@class="text js_memo_node"]//p')
+
+    for i in content_info:
+        if i.text == None:
+            continue
+        else:
+            content += i.text + '_'
+
+    return content
 
 
 def get_img_urls():

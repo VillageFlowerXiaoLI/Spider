@@ -49,7 +49,19 @@ def get_title():
 def get_content():
     global data
 
-    return ''
+    # < div class ="ctd_main_body" >
+
+    content = ''
+
+    content_info = data.xpath('//div[@class="ctd_main_body"]//p')
+
+    for i in content_info:
+        if i.text == None:
+            continue
+        else:
+            content += i.text + '_'
+
+    return content
 
 
 # 只取前五十张图片的url

@@ -53,11 +53,11 @@ def get_content():
 
     content_info = data.xpath('//p[@class="section-des"]')
 
-    content_list = []
     for i in content_info:
-        content_list.append(i.text)
-
-    content = '_'.join(content_list)
+        if i.text == None:
+            continue
+        else:
+            content += i.text + '_'
 
     return content
 
