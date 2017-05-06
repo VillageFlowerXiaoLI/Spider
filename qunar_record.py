@@ -5,6 +5,10 @@ import requests
 from random import randint
 from lxml import etree
 import sqlite3
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 db_path = '/Users/duxinlu/Desktop/dachuang2017/dachuang.db'
 
@@ -90,7 +94,7 @@ if __name__ == '__main__':
     img_urls = get_img_urls()
 
     try:
-        db.execute('insert into spider_data values ("ctrip","%s","%s","%s","%s");'
+        db.execute('insert into spider_data values ("qunar","%s","%s","%s","%s");'
                    % (get_travel(), title, content, img_urls))
         db.commit()
     except:

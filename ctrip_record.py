@@ -5,6 +5,10 @@ import requests
 from random import randint
 from lxml import etree
 import sqlite3
+import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 db_path = '/Users/duxinlu/Desktop/dachuang2017/dachuang.db'
 
