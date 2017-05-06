@@ -83,16 +83,17 @@ def get_img_urls():
 
 if __name__ == '__main__':
     db = connect_db()
+    cursor = db.cursor()
 
     title = get_title()
     content = get_content()
     img_urls = get_img_urls()
 
     try:
-        db.execute('insert into spider_data values ("tuniu","%s","%s","%s","%s");'
-                   % (get_travel(), title, content, img_urls))
+        cursor.execute('INSERT INTO spider_data VALUES ("tuniu",?,?,?,?);', (get_travel(), title, content, img_urls))
         db.commit()
     except:
         raise
     finally:
+        cursor.close()
         db.close()

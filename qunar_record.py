@@ -88,16 +88,17 @@ if __name__ == '__main__':
         raise Exception(u'请求图片url出错，请重新爬取数据')
 
     db = connect_db()
+    cursor = db.cursor()
 
     title = get_title()
     content = get_content()
     img_urls = get_img_urls()
 
     try:
-        db.execute('insert into spider_data values ("qunar","%s","%s","%s","%s");'
-                   % (get_travel(), title, content, img_urls))
+        cursor.execute('INSERT INTO spider_data VALUES ("qunar",?,?,?,?);', (get_travel(), title, content, img_urls))
         db.commit()
     except:
         raise
     finally:
+        cursor.close()
         db.close()
