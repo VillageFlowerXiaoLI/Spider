@@ -86,7 +86,11 @@ if __name__ == '__main__':
     content = get_content()
     img_urls = get_img_urls()
 
-    db.execute('insert into spider_data values ("ctrip","%s","%s","%s","%s");'
-               % (get_travel(), title, content, img_urls))
-    db.commit()
-    db.close()
+    try:
+        db.execute('insert into spider_data values ("ctrip","%s","%s","%s","%s");'
+                   % (get_travel(), title, content, img_urls))
+        db.commit()
+    except:
+        raise
+    finally:
+        db.close()
